@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ShopDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Category">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Category_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Products" Relationship="Self.FK__Products__Catego__29572725" FromRole="Categories" ToRole="Products" />
+    <NavigationProperty Name="Marka_to_Category" Relationship="ShopDbModel.FK_Marka_to_Category_Categories" FromRole="Category" ToRole="Marka_to_Category" />
+  </EntityType>
+  <EntityType Name="Marka">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Marka_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Products" Relationship="Self.FK__Products__MarkaI__286302EC" FromRole="Markas" ToRole="Products" />
+    <NavigationProperty Name="Marka_to_Category" Relationship="ShopDbModel.FK_Marka_to_Category_Markas" FromRole="Marka" ToRole="Marka_to_Category" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="WorkerId" Type="Int32" Nullable="false" />
+    <Property Name="ProductId" Type="Int32" Nullable="false" />
+    <Property Name="Purchase_Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Amount" Type="Int32" Nullable="false" />
+    <Property Name="Price" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <NavigationProperty Name="Product" Relationship="Self.FK__Orders__ProductI__2F10007B" FromRole="Orders" ToRole="Products" />
+    <NavigationProperty Name="Worker" Relationship="Self.FK__Orders__WorkerId__2E1BDC42" FromRole="Orders" ToRole="Worker" />
+  </EntityType>
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Product_Name" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Product_Price" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="Quantity" Type="Int32" Nullable="false" />
+    <Property Name="MarkaId" Type="Int32" Nullable="false" />
+    <Property Name="CategoryId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Category" Relationship="Self.FK__Products__Catego__29572725" FromRole="Products" ToRole="Categories" />
+    <NavigationProperty Name="Marka" Relationship="Self.FK__Products__MarkaI__286302EC" FromRole="Products" ToRole="Markas" />
+    <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__ProductI__2F10007B" FromRole="Products" ToRole="Orders" />
+  </EntityType>
+  <EntityType Name="Worker">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Fullname" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Username" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__WorkerId__2E1BDC42" FromRole="Worker" ToRole="Orders" />
+  </EntityType>
+  <Association Name="FK__Products__Catego__29572725">
+    <End Role="Categories" Type="Self.Category" Multiplicity="1" />
+    <End Role="Products" Type="Self.Product" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Categories">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Products">
+        <PropertyRef Name="CategoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Products__MarkaI__286302EC">
+    <End Role="Markas" Type="Self.Marka" Multiplicity="1" />
+    <End Role="Products" Type="Self.Product" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Markas">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Products">
+        <PropertyRef Name="MarkaId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Orders__ProductI__2F10007B">
+    <End Role="Products" Type="Self.Product" Multiplicity="1" />
+    <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="ProductId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Orders__WorkerId__2E1BDC42">
+    <End Role="Worker" Type="Self.Worker" Multiplicity="1" />
+    <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Worker">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Orders">
+        <PropertyRef Name="WorkerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ShopDbEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Categories" EntityType="Self.Category" />
+    <EntitySet Name="Markas" EntityType="Self.Marka" />
+    <EntitySet Name="Orders" EntityType="Self.Order" />
+    <EntitySet Name="Products" EntityType="Self.Product" />
+    <EntitySet Name="Workers" EntityType="Self.Worker" />
+    <AssociationSet Name="FK__Products__Catego__29572725" Association="Self.FK__Products__Catego__29572725">
+      <End Role="Categories" EntitySet="Categories" />
+      <End Role="Products" EntitySet="Products" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Products__MarkaI__286302EC" Association="Self.FK__Products__MarkaI__286302EC">
+      <End Role="Markas" EntitySet="Markas" />
+      <End Role="Products" EntitySet="Products" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Orders__ProductI__2F10007B" Association="Self.FK__Orders__ProductI__2F10007B">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Orders__WorkerId__2E1BDC42" Association="Self.FK__Orders__WorkerId__2E1BDC42">
+      <End Role="Worker" EntitySet="Workers" />
+      <End Role="Orders" EntitySet="Orders" />
+    </AssociationSet>
+    <EntitySet Name="Marka_to_Category" EntityType="ShopDbModel.Marka_to_Category" />
+    <AssociationSet Name="FK_Marka_to_Category_Categories" Association="ShopDbModel.FK_Marka_to_Category_Categories">
+      <End Role="Category" EntitySet="Categories" />
+      <End Role="Marka_to_Category" EntitySet="Marka_to_Category" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Marka_to_Category_Markas" Association="ShopDbModel.FK_Marka_to_Category_Markas">
+      <End Role="Marka" EntitySet="Markas" />
+      <End Role="Marka_to_Category" EntitySet="Marka_to_Category" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Marka_to_Category">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MarkaId" Type="Int32" />
+    <Property Name="CategoryId" Type="Int32" />
+    <NavigationProperty Name="Category" Relationship="ShopDbModel.FK_Marka_to_Category_Categories" FromRole="Marka_to_Category" ToRole="Category" />
+    <NavigationProperty Name="Marka" Relationship="ShopDbModel.FK_Marka_to_Category_Markas" FromRole="Marka_to_Category" ToRole="Marka" />
+  </EntityType>
+  <Association Name="FK_Marka_to_Category_Categories">
+    <End Type="ShopDbModel.Category" Role="Category" Multiplicity="0..1" />
+    <End Type="ShopDbModel.Marka_to_Category" Role="Marka_to_Category" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Category">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Marka_to_Category">
+        <PropertyRef Name="CategoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Marka_to_Category_Markas">
+    <End Type="ShopDbModel.Marka" Role="Marka" Multiplicity="0..1" />
+    <End Type="ShopDbModel.Marka_to_Category" Role="Marka_to_Category" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Marka">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Marka_to_Category">
+        <PropertyRef Name="MarkaId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
